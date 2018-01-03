@@ -1,22 +1,46 @@
 AWSTemplateFormatVersion: 2010-09-09
 Resources:
+
   AkiraDevInstance:
     # http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance.html
     Type: AWS::EC2::Instance
+#   Metadata:
+#      Comment: Install GIT
+#      AWS::CloudFormation::Init:
+#        config:
+#          packages:
+#            yum:
+#              git: []
     Properties:
       ImageId: ami-55ef662f
       InstanceType: t2.micro
       KeyName: AkiraKeyPair
-      IamInstanceProfile: !Ref DevInstanceProfile
+#      IamInstanceProfile: !Ref DevInstanceProfile
       SecurityGroups:
         - !Ref AkiraDevSecurityGroup
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          # Install the needed tools.
+          yum update -y
+          yum install git -y
+          yum install nginx -y
+          curl --silent --location https://rpm.nodesource.com/setup_8.x | bash -
+          yum install nodejs -y
+          # Create a script for running the server.
+          echo "git clone https://github.com/godzilla8711/akira-docs.git" > /home/ec2-user/init.sh
+          echo "git clone https://github.com/godzilla8711/akira-server.git" >> /home/ec2-user/init.sh
+          echo "cd ~/akira-server" >> /home/ec2-user/init.sh
+          echo "npm install" >> /home/ec2-user/init.sh
+          echo "node ." >> /home/ec2-user/init.sh
+          chmod 777 /home/ec2-user/init.sh
 
-  DevInstanceProfile:
-    Type: AWS::IAM::InstanceProfile
-    Properties:
-      Path: /
-      Roles:
-        - S3FullAccess
+#  DevInstanceProfile:
+#    Type: AWS::IAM::InstanceProfile
+#    Properties:
+#      Path: /
+#      Roles:
+#        - S3FullAccess
 
   AkiraDevSecurityGroup:
     # http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group.html
@@ -41,7 +65,21 @@ Resources:
         ToPort: 5000
         CidrIp: 0.0.0.0/0
 
+  AkiraRecordSet:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneName: lnproject.com.
+      Name: www.lnproject.com.
+      Type: A
+      TTL: '60'
+      ResourceRecords:
+        - !GetAtt AkiraDevInstance.PublicIp
+
 Outputs:
+  DomainName:
+    Description: Domain name of record set
+    Value:
+      !Ref AkiraRecordSet
   PublicIP:
     Description: Public IP address of the web server
     Value:
