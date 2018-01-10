@@ -28,14 +28,21 @@ Resources:
           curl --silent --location https://rpm.nodesource.com/setup_8.x | bash -
           yum install nodejs -y
           # Create a script for running the server.
-          echo "git clone https://github.com/godzilla8711/akira-docs.git" > /home/ec2-user/init.sh
+          echo "rm -rf akira-docs" > /home/ec2-user/init.sh
+          echo "git clone https://github.com/godzilla8711/akira-docs.git" >> /home/ec2-user/init.sh
+          echo "rm -rf akira-client" >> /home/ec2-user/init.sh
           echo "git clone https://github.com/godzilla8711/akira-client.git" >> /home/ec2-user/init.sh
+          echo "rm -rf akira-server" >> /home/ec2-user/init.sh
           echo "git clone https://github.com/godzilla8711/akira-server.git" >> /home/ec2-user/init.sh
+          echo "cd ~/akira-client" >> /home/ec2-user/init.sh
+          echo "npm install" >> /home/ec2-user/init.sh
+          echo "npm run build" >> /home/ec2-user/init.sh
           echo "cd ~/akira-client/nginx" >> /home/ec2-user/init.sh
           echo "./restart.sh" >> /home/ec2-user/init.sh
           echo "cd ~/akira-server" >> /home/ec2-user/init.sh
           echo "npm install" >> /home/ec2-user/init.sh
           echo "node . -Dakira &" >> /home/ec2-user/init.sh
+          echo "ps -eaf | grep node | grep Dakira | tr -s " " " " | cut -d " " -f2 | xargs kill" >> /home/ec2-user/init.sh
           echo "cd ~" >> /home/ec2-user/init.sh
           chmod 777 /home/ec2-user/init.sh
 
