@@ -42,8 +42,8 @@ cd ~
 # Install and configure postgres
 sudo yum install postgresql96 postgresql96-server postgresql96-devel postgresql96-contrib postgresql96-docs -y
 sudo service postgresql96 initdb
-sudo cp pg_hba.conf /var/lib/pgsql96/data/pg_hba.conf
-sudo cp postgresql.conf /var/lib/pgsql96/data/postgresql.conf
+sudo cp akira-docs/postgres/pg_hba.conf /var/lib/pgsql96/data/pg_hba.conf
+sudo cp akira-docs/postgres/postgresql.conf /var/lib/pgsql96/data/postgresql.conf
 sudo service postgresql96 restart
 sudo -u postgres psql -c "alter user postgres with password '$DB_PASS'"
 
