@@ -28,7 +28,7 @@ Resources:
           yum install nginx -y
           curl --silent --location https://rpm.nodesource.com/setup_8.x | bash -
           yum install nodejs -y
-          # Fetch the script that will install the repos 
+          # Fetch the script that will install the s/w repos 
           cd /home/ec2-user
           wget https://raw.githubusercontent.com/godzilla8711/akira-docs/master/init.sh 
           chmod 777 /home/ec2-user/init.sh

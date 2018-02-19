@@ -17,6 +17,8 @@ rm -rf akira-client
 git clone https://github.com/godzilla8711/akira-client.git
 rm -rf akira-server
 git clone https://github.com/godzilla8711/akira-server.git
+rm -rf gps-client
+git clone https://github.com/godzilla8711/gps-client.git
 
 # Enable the Akira web app by building the boot.js and starting NGINX 
 # NINGX will act as a proxy server to forward requests to the node processes.
