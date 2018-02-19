@@ -1,10 +1,11 @@
 # Establish the required settings
 export USER_NAME="Last, First"
 export USER_EMAIL="Email"
+export DB_PASS="dbpass"
 
-if [ "$USER_NAME" == "Last, First" ] || [ "$USER_EMAIL" == "Email" ]; then
+if [ "$USER_NAME" == "Last, First" ] || [ "$USER_EMAIL" == "Email" ] [ "$DB_PASS" == "dbpass" ]; then
   echo
-  echo "Error -- Both USER_NAME and USER_EMAIL must be specified"
+  echo "Error -- Both USER_NAME, USER_EMAIL and DB_PASS must be specified"
   echo
   exit
 fi
@@ -38,5 +39,11 @@ git config --global color.ui true
 npm config set package-lock false
 cd ~
 
-git config --list --global
+# Install and configure postgres
+sudo yum install postgresql96 postgresql96-server postgresql96-devel postgresql96-contrib postgresql96-docs -y
+sudo service postgresql96 initdb
+sudo cp pg_hba.conf /var/lib/pgsql96/data/pg_hba.conf
+sudo cp postgresql.conf /var/lib/pgsql96/data/postgresql.conf
+sudo service postgresql96 restart
+sudo -u postgres psql -c "alter user postgres with password '$DB_PASS'"
 
