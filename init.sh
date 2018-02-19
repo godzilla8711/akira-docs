@@ -47,3 +47,6 @@ sudo cp akira-docs/postgres/postgresql.conf /var/lib/pgsql96/data/postgresql.con
 sudo service postgresql96 restart
 sudo -u postgres psql -c "alter user postgres with password '$DB_PASS'"
 
+# Create the database schema and initialize the data
+psql -d postgres -U postgres -f akira-docs/postgres/reset-db.sql
+
